@@ -14,7 +14,7 @@ class GameOfLife {
 class Board {
     int sizeX;
     int sizeY;
-    char[][] plansza = new char[sizeX][sizeY];
+    char[][] plansza;
 
     final char zero = '□';
     final char one = '■';
@@ -34,6 +34,7 @@ class Board {
         String flag = " ";
         int x;
         int y;
+        this.plansza = new char[sizeX][sizeY];
 
 
         Scanner scanner = new Scanner(System.in);
@@ -52,7 +53,6 @@ class Board {
             println("Do you want to add another one? y/n");
             flag = scanner.nextLine();
         }
-
         DisplayBoard();
 
 
