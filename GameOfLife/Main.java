@@ -3,6 +3,9 @@ import java.util.Scanner;
 class GameOfLife {
     Board board;
 
+    GameOfLife(Board b){
+        this.board = b;
+    }
 
     public int countLivingCells(int x, int y){
         int livingCellsCount = 0;
@@ -17,10 +20,6 @@ class GameOfLife {
 
         return livingCellsCount;
     }
-
-    GameOfLife(Board b){
-        this.board = b;
-    }
 }
 
 class Board {
@@ -31,15 +30,6 @@ class Board {
     final char zero = '□';
     final char one = '■';
 
-    public void DisplayBoard () {
-        for (int i = 0; i < sizeX; i++) {
-            for (int j = 0; j < sizeY; j++){
-                print(plansza[i][j] + " ");
-            }
-            print("\n");
-        }
-    }
-
     public Board (int SizeX, int SizeY) {
         this.sizeX = SizeX;
         this.sizeY = SizeY;
@@ -47,17 +37,15 @@ class Board {
         int x;
         int y;
         this.plansza = new char[sizeX][sizeY];
-
-
         Scanner scanner = new Scanner(System.in);
-        for (int i = 0; i < this.sizeX; i++){
-            for(int j = 0; j < this.sizeY; j++){
+
+        for (int i = 0; i < this.sizeX; i++) {
+            for (int j = 0; j < this.sizeY; j++) {
                 plansza[i][j] = zero;
             }
         }
-
-        while(!flag.equals("n")){
-            println("Enter x of living cell (0<x<" + (this.sizeX-1) +")");
+        while (!flag.equals("n")) {
+            println("Enter x of living cell (0<x<" + (this.sizeX - 1) + ")");
             x = scanner.nextInt();
             println("Enter y of living cell 0<y<" + (this.sizeY - 1) + ")");
             y = scanner.nextInt();
@@ -66,15 +54,17 @@ class Board {
             println("Do you want to add another one? y/n");
             scanner.nextLine();
             flag = scanner.nextLine();
-
         }
-
-
-
     }
 
-
-
+    public void DisplayBoard () {
+        for (int i = 0; i < sizeX; i++) {
+            for (int j = 0; j < sizeY; j++){
+                print(plansza[i][j] + " ");
+            }
+            print("\n");
+        }
+    }
 }
 
 static void println(Object s) {
