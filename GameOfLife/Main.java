@@ -1,13 +1,25 @@
 import java.util.Scanner;
 
 class GameOfLife {
-    Board b;
+    Board board;
 
-    public static int countLivingCells(Board b){
-        for(int i = 0; i < b.sizeX; i++){
-            continue;
-        }
-        return 0;
+
+    public int countLivingCells(int x, int y){
+        int livingCellsCount = 0;
+        if(x != 0 && y != 0 && this.board.plansza[x - 1][y - 1] == this.board.one) livingCellsCount ++;
+        if(y != 0 && this.board.plansza[x][y - 1] == this.board.one) livingCellsCount ++;
+        if(x != this.board.sizeX - 1 && y != 0 && this.board.plansza[x + 1][y - 1] == this.board.one) livingCellsCount ++;
+        if(x != 0 && this.board.plansza[x - 1][y] == this.board.one) livingCellsCount ++;
+        if(x != this.board.sizeX - 1 && y != 0 && this.board.plansza[x + 1][y] == this.board.one) livingCellsCount ++;
+        if(x != 0 && y != this.board.sizeY && this.board.plansza[x - 1][y + 1] == this.board.one) livingCellsCount ++;
+        if(y != this.board.sizeY - 1 && this.board.plansza[x][y + 1] == this.board.one) livingCellsCount ++;
+        if(x != this.board.sizeX - 1 && y != this.board.sizeY - 1 && this.board.plansza[x + 1][y + 1] == this.board.one) livingCellsCount ++;
+
+        return livingCellsCount;
+    }
+
+    GameOfLife(Board b){
+        this.board = b;
     }
 }
 
@@ -82,5 +94,10 @@ void main(String[] args) {
     int y = scanner.nextInt();
     Board board = new Board(x, y);
     board.DisplayBoard();
+    GameOfLife gameOfLife = new GameOfLife(board);
+
+    println("");
+    println("");
+    println(gameOfLife.countLivingCells(0,2));
 }
 
