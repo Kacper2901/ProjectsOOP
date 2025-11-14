@@ -20,8 +20,8 @@ class Board {
     final char one = '■';
 
     public void DisplayBoard () {
-        for (int i = 1; i <= sizeX; i++) {
-            for (int j = 1; j <= sizeY; j++){
+        for (int i = 0; i < sizeX; i++) {
+            for (int j = 0; j < sizeY; j++){
                 print(plansza[i][j] + " ");
             }
             print("\n");
@@ -44,16 +44,18 @@ class Board {
             }
         }
 
-        println("Enter x,y of living cell (0<x<" + (this.sizeX-1) +", 0<y<" + (this.sizeY - 1));
         while(!flag.equals("n")){
+            println("Enter x of living cell (0<x<" + (this.sizeX-1) +")");
             x = scanner.nextInt();
+            println("Enter y of living cell 0<y<" + (this.sizeY - 1) + ")");
             y = scanner.nextInt();
             plansza[x][y] = one;
-
+            println(plansza[x][y]);
             println("Do you want to add another one? y/n");
+            scanner.nextLine();
             flag = scanner.nextLine();
+
         }
-        DisplayBoard();
 
 
 
