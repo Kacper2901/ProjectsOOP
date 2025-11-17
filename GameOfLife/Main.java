@@ -1,7 +1,8 @@
 import java.util.Scanner;
+import java.lang.Thread;
 
 class GameOfLife {
-    Board board;
+    public Board board;
 
     GameOfLife(Board b){
         this.board = b;
@@ -9,23 +10,48 @@ class GameOfLife {
 
     public int countLivingCells(int x, int y){
         int livingCellsCount = 0;
-        if(x != 0 && y != 0 && this.board.plansza[x - 1][y - 1] == this.board.one) livingCellsCount ++;
-        if(y != 0 && this.board.plansza[x][y - 1] == this.board.one) livingCellsCount ++;
-        if(x != this.board.sizeX - 1 && y != 0 && this.board.plansza[x + 1][y - 1] == this.board.one) livingCellsCount ++;
-        if(x != 0 && this.board.plansza[x - 1][y] == this.board.one) livingCellsCount ++;
-        if(x != this.board.sizeX - 1 && y != 0 && this.board.plansza[x + 1][y] == this.board.one) livingCellsCount ++;
-        if(x != 0 && y != this.board.sizeY && this.board.plansza[x - 1][y + 1] == this.board.one) livingCellsCount ++;
-        if(y != this.board.sizeY - 1 && this.board.plansza[x][y + 1] == this.board.one) livingCellsCount ++;
-        if(x != this.board.sizeX - 1 && y != this.board.sizeY - 1 && this.board.plansza[x + 1][y + 1] == this.board.one) livingCellsCount ++;
+        if(x != 0 && y != 0 && this.board.pastBoard[x - 1][y - 1] == this.board.one) livingCellsCount ++;
+        if(y != 0 && this.board.pastBoard[x][y - 1] == this.board.one) livingCellsCount ++;
+        if(x != this.board.sizeX - 1 && y != 0 && this.board.pastBoard[x + 1][y - 1] == this.board.one) livingCellsCount ++;
+        if(x != 0 && this.board.pastBoard[x - 1][y] == this.board.one) livingCellsCount ++;
+        if(x != this.board.sizeX - 1 && y != 0 && this.board.pastBoard[x + 1][y] == this.board.one) livingCellsCount ++;
+        if(x != 0 && y != this.board.sizeY - 1 && this.board.pastBoard[x - 1][y + 1] == this.board.one) livingCellsCount ++;
+        if(y != this.board.sizeY - 1 && this.board.pastBoard[x][y + 1] == this.board.one) livingCellsCount ++;
+        if(x != this.board.sizeX - 1 && y != this.board.sizeY - 1 && this.board.pastBoard[x + 1][y + 1] == this.board.one) livingCellsCount ++;
 
         return livingCellsCount;
+    }
+
+    public void simulationStep(){
+        int livingCells;
+        board.pastBoard = board.newBoard;
+        for(int i = 0; i < board.sizeY; i++){
+            for(int j = 0; j < board.sizeX; j++){
+                livingCells = countLivingCells(j,i);
+                if ((livingCells < 2 || livingCells > 4) && board.pastBoard[j][i] == board.one) board.newBoard[j][i] = board.zero;
+                if (livingCells == 3 && board.pastBoard[j][i] == board.zero) board.newBoard[j][i] = board.one;
+                if ((livingCells == 3 || livingCells == 4) && board.pastBoard[j][i] == board.one) board.newBoard[j][i] = board.one;
+            }
+        }
+        board.DisplayBoard();
+        println("");
+        println("");
+        println("");
+    }
+
+    public void startSimulation() throws InterruptedException{
+        while(true){
+            simulationStep();
+            Thread.sleep(2000);
+        }
     }
 }
 
 class Board {
     int sizeX;
     int sizeY;
-    char[][] plansza;
+    char[][] newBoard;
+    char[][] pastBoard;
 
     final char zero = '□';
     final char one = '■';
@@ -36,12 +62,14 @@ class Board {
         String flag = " ";
         int x;
         int y;
-        this.plansza = new char[sizeX][sizeY];
+        this.newBoard = new char[sizeX][sizeY];
+        this.pastBoard = new char[sizeX][sizeY];
         Scanner scanner = new Scanner(System.in);
 
-        for (int i = 0; i < this.sizeX; i++) {
-            for (int j = 0; j < this.sizeY; j++) {
-                plansza[i][j] = zero;
+        for (int i = 0; i < this.sizeY; i++) {
+            for (int j = 0; j < this.sizeX; j++) {
+                newBoard[j][i] = zero;
+                pastBoard[j][i] = zero;
             }
         }
         while (!flag.equals("n")) {
@@ -49,8 +77,8 @@ class Board {
             x = scanner.nextInt();
             println("Enter y of living cell 0<y<" + (this.sizeY - 1) + ")");
             y = scanner.nextInt();
-            plansza[x][y] = one;
-            println(plansza[x][y]);
+            newBoard[x][y] = one;
+            DisplayBoard();
             println("Do you want to add another one? y/n");
             scanner.nextLine();
             flag = scanner.nextLine();
@@ -60,7 +88,7 @@ class Board {
     public void DisplayBoard () {
         for (int i = 0; i < sizeX; i++) {
             for (int j = 0; j < sizeY; j++){
-                print(plansza[i][j] + " ");
+                print(newBoard[j][i] + " ");
             }
             print("\n");
         }
@@ -76,7 +104,7 @@ static void print(Object s) {
 }
 
 
-void main(String[] args) {
+void main(String[] args) throws InterruptedException {
     Scanner scanner = new Scanner(System.in);
     println("Podaj rozmiar x tabeli");
     int x = scanner.nextInt();
@@ -88,6 +116,6 @@ void main(String[] args) {
 
     println("");
     println("");
-    println(gameOfLife.countLivingCells(0,2));
+    gameOfLife.startSimulation();
 }
 
