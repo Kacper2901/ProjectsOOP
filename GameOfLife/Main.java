@@ -2,6 +2,54 @@ import java.util.Scanner;
 import java.lang.Thread;
 
 final int SAME_BOARD_LIMIT = 5;
+final char[][] GLIDER_20 = {
+        { '□','□','□','□','□','□','□','□','□','□','□','□','□','□','□','□','□','□','□','□' },
+        { '□','□','□','□','□','□','□','□','□','□','□','□','□','□','□','□','□','□','□','□' },
+        { '□','□','□','□','□','□','□','□','□','□','■','□','□','□','□','□','□','□','□','□' },
+        { '□','□','□','□','□','□','□','□','□','■','□','□','□','□','□','□','□','□','□','□' },
+        { '□','□','□','□','□','□','□','□','□','■','■','■','□','□','□','□','□','□','□','□' },
+        { '□','□','□','□','□','□','□','□','□','□','□','□','□','□','□','□','□','□','□','□' },
+        { '□','□','□','□','□','□','□','□','□','□','□','□','□','□','□','□','□','□','□','□' },
+        { '□','□','□','□','□','□','□','□','□','□','□','□','□','□','□','□','□','□','□','□' },
+        { '□','□','□','□','□','□','□','□','□','□','□','□','□','□','□','□','□','□','□','□' },
+        { '□','□','□','□','□','□','□','□','□','□','□','□','□','□','□','□','□','□','□','□' },
+        { '□','□','□','□','□','□','□','□','□','□','□','□','□','□','□','□','□','□','□','□' },
+        { '□','□','□','□','□','□','□','□','□','□','□','□','□','□','□','□','□','□','□','□' },
+        { '□','□','□','□','□','□','□','□','□','□','□','□','□','□','□','□','□','□','□','□' },
+        { '□','□','□','□','□','□','□','□','□','□','□','□','□','□','□','□','□','□','□','□' },
+        { '□','□','□','□','□','□','□','□','□','□','□','□','□','□','□','□','□','□','□','□' },
+        { '□','□','□','□','□','□','□','□','□','□','□','□','□','□','□','□','□','□','□','□' },
+        { '□','□','□','□','□','□','□','□','□','□','□','□','□','□','□','□','□','□','□','□' },
+        { '□','□','□','□','□','□','□','□','□','□','□','□','□','□','□','□','□','□','□','□' },
+        { '□','□','□','□','□','□','□','□','□','□','□','□','□','□','□','□','□','□','□','□' },
+        { '□','□','□','□','□','□','□','□','□','□','□','□','□','□','□','□','□','□','□','□' }
+};
+
+final char[][] BLINKER_20 = {
+        { '□','□','□','□','□','□','□','□','□','□','□','□','□','□','□','□','□','□','□','□' },
+        { '□','□','□','□','□','□','□','□','□','□','□','□','□','□','□','□','□','□','□','□' },
+        { '□','□','□','□','□','□','□','□','□','□','□','□','□','□','□','□','□','□','□','□' },
+        { '□','□','□','□','□','□','□','□','□','□','□','□','□','□','□','□','□','□','□','□' },
+        { '□','□','□','□','□','□','□','□','□','□','□','■','■','■','□','□','□','□','□','□' },
+        { '□','□','□','□','□','□','□','□','□','□','□','□','□','□','□','□','□','□','□','□' },
+        { '□','□','□','□','□','□','□','□','□','□','□','□','□','□','□','□','□','□','□','□' },
+        { '□','□','□','□','□','□','□','□','□','□','□','□','□','□','□','□','□','□','□','□' },
+        { '□','□','□','□','□','□','□','□','□','□','□','□','□','□','□','□','□','□','□','□' },
+        { '□','□','□','□','□','□','□','□','□','□','□','□','□','□','□','□','□','□','□','□' },
+        { '□','□','□','□','□','□','□','□','□','□','□','□','□','□','□','□','□','□','□','□' },
+        { '□','□','□','□','□','□','□','□','□','□','□','□','□','□','□','□','□','□','□','□' },
+        { '□','□','□','□','□','□','□','□','□','□','□','□','□','□','□','□','□','□','□','□' },
+        { '□','□','□','□','□','□','□','□','□','□','□','□','□','□','□','□','□','□','□','□' },
+        { '□','□','□','□','□','□','□','□','□','□','□','□','□','□','□','□','□','□','□','□' },
+        { '□','□','□','□','□','□','□','□','□','□','□','□','□','□','□','□','□','□','□','□' },
+        { '□','□','□','□','□','□','□','□','□','□','□','□','□','□','□','□','□','□','□','□' },
+        { '□','□','□','□','□','□','□','□','□','□','□','□','□','□','□','□','□','□','□','□' },
+        { '□','□','□','□','□','□','□','□','□','□','□','□','□','□','□','□','□','□','□','□' },
+        { '□','□','□','□','□','□','□','□','□','□','□','□','□','□','□','□','□','□','□','□' }
+};
+
+
+
 
 class GameOfLife {
     public Board board;
@@ -62,16 +110,19 @@ class GameOfLife {
         return true;
     }
 
-    public void startSimulation() throws InterruptedException {
+    public void startSimulation(int maxSteps) throws InterruptedException {
         int sameBoardCount = 0;
+        int stepCount = 0;
         while (true) {
             simulationStep();
+            stepCount++;
             if (sameBoard()) sameBoardCount += 1;
             else sameBoardCount = 0;
-            if (sameBoardCount == SAME_BOARD_LIMIT) {
-                print("The same board state has occurred " + SAME_BOARD_LIMIT + " times. Terminating the simulation.");
+            if (sameBoardCount == SAME_BOARD_LIMIT || stepCount > maxSteps) {
+                print("The same board state has occurred " + SAME_BOARD_LIMIT + " times or maximum number of steps exceeded.S Terminating the simulation.");
                 break;
             }
+
             Thread.sleep(500);
         }
     }
@@ -86,7 +137,7 @@ static class Board {
     final char DEAD = '□';
     final char ALIVE = '■';
 
-    public Board(int SizeX, int SizeY) {
+    public Board(int SizeX, int SizeY, boolean isSelfInitialized) {
         this.sizeX = SizeX;
         this.sizeY = SizeY;
         int x;
@@ -103,7 +154,7 @@ static class Board {
             }
         }
 
-        while (true) {
+        while (isSelfInitialized) {
           try {
               println("Enter coordinates or press 'q' if you've finished");
               print("Enter x of living cell (0 < x < " + (this.sizeX - 1) + "): ");
@@ -165,35 +216,73 @@ static void print(Object s) {
     System.out.print(s);
 }
 
-
-void main() throws InterruptedException {
+void inputSimulation() throws InterruptedException {
     Scanner scanner = new Scanner(System.in);
     while (true) {
         try {
             println("GAME OF LIFE");
-            print("Enter the X size of the board: ");
-            int x = scanner.nextInt();
-            while (x < 1) {
-                print("Enter a positive X size: ");
-                x = scanner.nextInt();
-            }
-            print("Enter the Y size of the board: ");
-            int y = scanner.nextInt();
-            while (y < 1) {
-                print("Enter a positive Y size: ");
-                y = scanner.nextInt();
-            }
+            println("");
+            println("Do you want to set your own board(1) or use some well-known shapes(2): ");
+            int choice = scanner.nextInt();
+            if(choice == 1){
+                print("Enter the X size of the board: ");
+                int x = scanner.nextInt();
+                while (x < 1) {
+                    print("Enter a positive X size: ");
+                    x = scanner.nextInt();
+                }
+                print("Enter the Y size of the board: ");
+                int y = scanner.nextInt();
+                while (y < 1) {
+                    print("Enter a positive Y size: ");
+                    y = scanner.nextInt();
+                }
 
-            Board board = new Board(x, y);
-            board.DisplayBoard(board.newBoard);
-            GameOfLife gameOfLife = new GameOfLife(board);
-            print("\n".repeat(2));
-            gameOfLife.startSimulation();
+                Board board = new Board(x, y, true);
+                board.DisplayBoard(board.newBoard);
+                GameOfLife gameOfLife = new GameOfLife(board);
+                print("\n".repeat(2));
+                gameOfLife.startSimulation(50);
+
+            }
+            else{
+                Board board = new Board(20,20, false);
+                println("Which shape do you choose: 1-Glider, 2-Blinker");
+                choice = scanner.nextInt();
+                switch (choice){
+                    case 1:
+                        board.newBoard = GLIDER_20;
+                        board.pastBoard = GLIDER_20;
+                        break;
+                    case 2:
+                        board.newBoard = BLINKER_20;
+                        board.pastBoard = BLINKER_20;
+                        break;
+                }
+                GameOfLife gameOfLife = new GameOfLife(board);
+                gameOfLife.startSimulation(10);
+            }
             println("\nPress 'q' to quit\n");
         }
         catch (InputMismatchException e) {
             break;
         }
     }
+}
+
+void showShapes(char[][] shape) throws InterruptedException{
+    Board board = new Board(20,20,false);
+    board.pastBoard = shape;
+    board.newBoard = shape;
+    GameOfLife game = new GameOfLife(board);
+    game.startSimulation(10);
+}
+
+
+void main() throws InterruptedException{
+    inputSimulation();
+//    showShapes(GLIDER_20);
+//    Thread.sleep(1000);
+//    showShapes(BLINKER_20);
 }
 
