@@ -17,7 +17,9 @@ class GameOfLife {
         int livingCellsCount = 0;
         for (int j = -1; j <= 1; j++) {
             for (int i = -1; i <= 1; i++) {
-                if ((x + i >= 0 && x + i <= board.sizeX - 1) && (y + j >= 0 && y + j <= board.sizeY - 1) && board.pastBoard[y + j][x + i] == board.ALIVE) {
+                if ((x + i >= 0 && x + i <= board.sizeX - 1) &&
+                        (y + j >= 0 && y + j <= board.sizeY - 1) &&
+                        board.pastBoard[y + j][x + i] == board.ALIVE) {
                     livingCellsCount++;
                 }
             }
