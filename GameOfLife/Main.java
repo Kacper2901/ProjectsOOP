@@ -31,6 +31,7 @@ class GameOfLife {
      */
     public void simulationStep() {
         int livingCells;
+        board.pastBoard = board.copyBoard(board);
         for (int i = 0; i < board.sizeY; i++) {
             for (int j = 0; j < board.sizeX; j++) {
                 livingCells = countLivingNeighbors(j, i);
@@ -45,7 +46,6 @@ class GameOfLife {
         print("\n");
         System.out.flush();
         board.DisplayBoard(board.newBoard);
-        board.pastBoard = board.copyBoard(board);
     }
 
     /**
@@ -65,6 +65,7 @@ class GameOfLife {
         while (true) {
             simulationStep();
             if (sameBoard()) sameBoardCount += 1;
+            else sameBoardCount = 0;
             if (sameBoardCount == SAME_BOARD_LIMIT) {
                 print("The same board state has occurred " + SAME_BOARD_LIMIT + " times. Terminating the simulation.");
                 break;
@@ -122,8 +123,8 @@ static class Board {
             } catch (InputMismatchException e) {
                 break;
             }
-            pastBoard[y][x] = ALIVE;
-            DisplayBoard(pastBoard);
+            newBoard[y][x] = ALIVE;
+            DisplayBoard(newBoard);
         }
     }
 
